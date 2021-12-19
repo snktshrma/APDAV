@@ -1,0 +1,186 @@
+<?xml version="1.0"?>
+<sdf version="1.4">
+    <model name="landing_station">
+      <pose>0 0 0  0 0 0</pose>
+      <static>false</static>
+      <link name="body">
+      <inertial>
+        <mass>1.0</mass>
+        <inertia>
+          <ixx>0.133667</ixx>       <!-- for a box: ixx = 0.083 * mass * (y*y + z*z) -->
+          <ixy>0.0</ixy>         <!-- for a box: ixy = 0 -->
+          <ixz>0.0</ixz>         <!-- for a box: ixz = 0 -->
+          <iyy>0.133667</iyy>       <!-- for a box: iyy = 0.083 * mass * (x*x + z*z) -->
+          <iyz>0.0</iyz>         <!-- for a box: iyz = 0 -->
+          <izz>0.266667</izz>       <!-- for a box: izz = 0.083 * mass * (x*x + y*y) -->
+        </inertia>
+      </inertial>
+      	<collision name="collision">
+      	<geometry>
+            <box>
+            <size>2 2 0.02</size>
+          </box>
+          </geometry>
+        </collision>
+        <visual name="visual">
+          <geometry>
+            <mesh><uri>model://landing_station/meshes/marker.obj</uri></mesh>
+          </geometry>
+        </visual>
+      </link>
+      
+      
+      
+      
+      
+      <!-- <link name="bod">
+      <pose>0 6 1.0 1.5707963268 0 0</pose>
+      <inertial>
+        <mass>1.0</mass>
+        <inertia>
+          <ixx>0.133667</ixx>       
+          <ixy>0.0</ixy>       
+          <ixz>0.0</ixz>         
+          <iyy>0.133667</iyy>    
+          <iyz>0.0</iyz>         
+          <izz>0.266667</izz>    
+        </inertia>
+      </inertial>
+      	<collision name="collision">
+      	<geometry>
+            <box>
+            <size>2 2 0.02</size>
+          </box>
+          </geometry>
+        </collision>
+        <visual name="visual">
+          <geometry>
+            <mesh><uri>model://landing_station/meshes/marker2.obj</uri></mesh>
+          </geometry>
+        </visual>
+      </link> 
+      
+      <joint name="bodyjoint" type="fixed">
+      <parent>body</parent>
+      <child>bod</child>
+      <pose>0 0 0 0 0 0</pose>
+    </joint> -->
+      <!-- ***************************IMU AND GPS*********************************************** -->
+      
+      
+      
+      <link name="imu_link">
+      <pose>0 0 0.05 0 0 0</pose>
+      <inertial>
+        <mass>0.01</mass>
+        <inertia>
+          <ixx>2.1733e-6</ixx><ixy>0</ixy><ixz>0</ixz><iyy>2.1733e-6</iyy><iyz>0</iyz><izz>1.8e-7</izz>
+        </inertia>
+      </inertial>
+      <visual name="visual">
+          <geometry>
+              <box><size>0.01 0.01 0.01</size></box>
+          </geometry>
+      </visual>
+      <collision name="collision">
+        <geometry>
+              <box><size>0.01 0.01 0.01</size></box>
+        </geometry>
+      </collision>
+      <sensor name="imu_sensor" type="imu">
+      <always_on>true</always_on>
+      <update_rate>100</update_rate>
+      <visualize>true</visualize>
+      <topic>__default_topic__</topic>
+      <plugin filename="libgazebo_ros_imu_sensor.so" name="imu_plugin">
+        <topicName>/moving_platform/imu</topicName>
+        <bodyName>imu_link</bodyName>
+        <updateRateHZ>10.0</updateRateHZ>
+        <gaussianNoise>0.0</gaussianNoise>
+        <xyzOffset>0 0 0</xyzOffset>
+        <rpyOffset>0 0 0</rpyOffset>
+        <frameName>imu_link</frameName>
+        <initialOrientationAsReference>false</initialOrientationAsReference>
+      </plugin>
+      <pose>0 0 0 0 0 0</pose>
+    </sensor>
+    </link>
+
+    <link name="gps_link">
+      <pose>0 0 0.0.01 0 0 0</pose>
+      <inertial>
+        <mass>0.01</mass>
+        <inertia>
+          <ixx>2.1733e-6</ixx><ixy>0</ixy><ixz>0</ixz><iyy>2.1733e-6</iyy><iyz>0</iyz><izz>1.8e-7</izz>
+        </inertia>
+      </inertial>
+      <visual name="visual">
+          <geometry>
+              <box> <size>0.01 0.01 0.01</size></box>
+          </geometry>
+      </visual>
+      <collision name="collision">
+        <geometry>
+              <box> <size>0.01 0.01 0.01</size></box>
+          </geometry>
+      </collision>
+    </link>
+    
+    <!-- ********************************************JOINTS*************************** -->
+    
+   
+    
+    <joint name="imu_joint" type="fixed">
+      <parent>body</parent>
+      <child>imu_link</child>
+      <pose>0 0 0 0 0 0</pose>
+    </joint>
+
+    <joint name="gps_joint" type="fixed">
+      <parent>body</parent>
+      <child>gps_link</child>
+      <pose>0 0 0 0 0 0</pose>
+    </joint>
+    
+    <!-- ********************************************PLUGINS************************** 
+    
+    <plugin name="imu_plugin" filename="libgazebo_ros_imu.so">
+      <updateRate>60</updateRate>
+      <alwaysOn>true</alwaysOn>
+      <bodyName>imu_link</bodyName>
+      <frameName>imu_link</frameName>
+      <topicName>/px4/imu/data</topicName>
+      <serviceName>imu_service</serviceName>
+      <gaussianNoise>0.0</gaussianNoise>
+      <updateRate>20.0</updateRate>
+      <xyzOffset>0 0 0</xyzOffset>
+      <rpyOffset>0 0 0</rpyOffset>
+    </plugin>
+    -->
+
+
+    <plugin name="gps_plugin" filename="libgazebo_ros_gps.so">
+      <updateRate>60</updateRate>
+      <robotNamespace>landing_station</robotNamespace>
+      <bodyName>gps_link</bodyName>
+      <!--<referenceLatitude>19</referenceLatitude>-->
+      <!--<referenceLongitude>72</referenceLongitude>-->
+      <referenceHeading>0</referenceHeading>
+      <referenceAltitude>0</referenceAltitude>
+      <topicName>/gps</topicName>
+      <velocityTopicName>/gps_velocity</velocityTopicName>
+    </plugin>
+    <!-- <plugin name="gazebo_gnss" filename="libhector_gazebo_ros_gps.so">
+      <updateRate>50</updateRate>
+      <alwaysOn>true</alwaysOn>
+      <bodyName>gps_link</bodyName>
+      <topicName>/gps</topicName>
+      <velocityTopicName>vel</velocityTopicName>
+      <referenceLatitude>19</referenceLatitude>
+      <referenceLongitude>72</referenceLongitude>
+      <referenceAltitude>0</referenceAltitude>
+      <status>2</status>
+      <service>8</service>
+    </plugin> -->
+    </model>
+</sdf>
